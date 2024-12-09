@@ -5,46 +5,75 @@
     <title>Interaction Window</title>
     <style>
         body {
+            margin: 0;
             display: flex;
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            margin: 0;
-            height: 100vh;
-            background-color: #f0f0f0;
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            overflow: hidden;
         }
-        .action-button {
+        button {
             width: 200px;
             height: 100px;
             margin: 20px;
             font-size: 40px;
             cursor: pointer;
-            border: 1px solid black;
+            border: 1.5px solid rgb(77, 71, 71);
             border-radius: 10px;
             transition: all 0.3s ease;
         }
-        .action-button:hover {
+        button:hover {
+            background-color: #d1e7dd;
             transform: scale(1.05);
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .good-button {
+            background-color: #d4edda;
+        }
+        .bad-button {
+            background-color: #f8d7da;
         }
     </style>
 </head>
 <body>
-    <button id="action1" class="action-button">🌱</button>
-    <button id="action2" class="action-button">🔥</button>
+    <button class="good-button">🌻</button>
+    <button class="bad-button">🔥</button>
 
     <script>
-        const action1Button = document.getElementById('action1');
-        const action2Button = document.getElementById('action2');
+        // List of emojis for buttons
+        const goodEmojis = ['🌟', '🌈', '🎉', '☀️', '🍎', '🌸', '🍀', '🌻'];
+        const badEmojis = ['🔥', '💣', '☠️', '🥀', '🧊', '🏗️', '⚡', '🗑️💩'];
 
-        action1Button.addEventListener('click', () => {
-            window.opener.postMessage({ action: 'good' }, '*');
-        });
+        // Get the buttons
+        const goodButton = document.querySelector('.good-button');
+        const badButton = document.querySelector('.bad-button');
 
-        action2Button.addEventListener('click', () => {
-            window.opener.postMessage({ action: 'bad' }, '*');
-        });
+        // Function to get a random emoji from a list
+        function getRandomEmoji(list) {
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        // Function to handle button clicks
+        function handleButtonClick(action) {
+            // Post message to the parent window
+            window.opener.postMessage({ action }, '*');
+
+            // Assign a random emoji to each button, ensuring no duplicates
+            const newGoodEmoji = getRandomEmoji(goodEmojis);
+            let newBadEmoji;
+            do {
+                newBadEmoji = getRandomEmoji(badEmojis);
+            } while (newBadEmoji === newGoodEmoji);
+
+            goodButton.textContent = newGoodEmoji;
+            badButton.textContent = newBadEmoji;
+        }
+
+        // Attach event listeners
+        goodButton.addEventListener('click', () => handleButtonClick('good'));
+        badButton.addEventListener('click', () => handleButtonClick('bad'));
     </script>
 </body>
 </html>
