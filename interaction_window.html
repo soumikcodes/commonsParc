@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interaction Window</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .action-button {
+            width: 200px;
+            height: 100px;
+            margin: 20px;
+            font-size: 40px;
+            cursor: pointer;
+            border: 1px solid black;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .action-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <button id="action1" class="action-button">🌱</button>
+    <button id="action2" class="action-button">🔥</button>
+
+    <script>
+        const action1Button = document.getElementById('action1');
+        const action2Button = document.getElementById('action2');
+
+        action1Button.addEventListener('click', () => {
+            window.opener.postMessage({ action: 'good' }, '*');
+        });
+
+        action2Button.addEventListener('click', () => {
+            window.opener.postMessage({ action: 'bad' }, '*');
+        });
+    </script>
+</body>
+</html>
