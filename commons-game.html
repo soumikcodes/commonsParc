@@ -26,15 +26,15 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
+            background-image: url("./imgs/Park-level-0.gif");
+            background-size: 100vw; 
         }
         #health-bar {
-            position: absolute;
-            top: 10px;
-            left: 10px;
             width: 200px;
             height: 20px;
             background-color: red;
             z-index: 10;
+            margin-bottom: 5px;
         }
         #health-progress {
             width: 100%;
@@ -49,19 +49,26 @@
             background-color: rgba(255,255,255,0.7);
             padding: 10px;
             border-radius: 5px;
+            z-index: 10;
+        }
+        .anecdote {
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <div id="park-window">
-        <div id="health-bar">
-            <div id="health-progress"></div>
-        </div>
         <div id="stats-container">
-            <div id="good-actions">Good Actions: 0</div>
-            <div id="bad-actions">Bad Actions: 0</div>
+            <!-- <div id="good-actions">Good Actions: 0</div>
+            <div id="bad-actions">Bad Actions: 0</div> -->
+            <div id="health-bar">
+                <div id="health-progress"></div>
+            </div>
             <div id="time-left">Time Left: 60</div>
         </div>
+        <!-- <div class="anecdote">
+                The Park is a Common
+            </div> -->
         <div id="nature-container"></div>
     </div>
 
@@ -70,12 +77,10 @@
         const gameState = {
             goodActions: 0,
             badActions: 0,
-            health: 100,
+            health: 50,
             timeLeft: 60,
             timerStarted: false, // Flag to ensure the timer starts only once
             timerInterval: null, // Holds the timer interval ID
-            natureElements: ['🌳', '🌲', '🍃', '🌿', '🍀', '🌵', '🌱', '🌻', '🌷'],
-            deadNatureElements: ['🍂', '🥀', '🌵', '☠️', '🥗', '🧊']
         };
 
         // DOM Elements
@@ -84,27 +89,43 @@
         const badActionsDisplay = document.getElementById('bad-actions');
         const timeLeftDisplay = document.getElementById('time-left');
         const healthProgress = document.getElementById('health-progress');
+        const anecdote = document.querySelector('.anecdote');
 
-        // Game Logic Functions
-        function generateNatureScene(isHealthy = true) {
-            natureContainer.innerHTML = '';
-            const elements = isHealthy ? gameState.natureElements : gameState.deadNatureElements;
+    // Game Logic Functions
+    function generateNatureScene(isHealthy = true) {
+        // Determine the level based on the health score
+        let level = 0;
 
-            for (let i = 0; i < 50; i++) {
-                const element = document.createElement('div');
-                element.style.position = 'absolute';
-                element.textContent = elements[Math.floor(Math.random() * elements.length)];
-                element.style.left = `${Math.random() * 100}%`;
-                element.style.top = `${Math.random() * 100}%`;
-                element.style.fontSize = `${Math.random() * 50 + 10}px`;
-                element.style.opacity = `${Math.random() * 0.7 + 0.3}`;
-                natureContainer.appendChild(element);
-            }
+        if (gameState.health > 90) {
+            level = 5; // Best state
+        } else if (gameState.health > 80) {
+            level = 4;
+        } else if (gameState.health > 70) {
+            level = 3;
+        } else if (gameState.health > 60) {
+            level = 2;
+        } else if (gameState.health > 50) {
+            level = 1; // Deteriorating state
+        } else if (gameState.health == 40) {
+            level = -1; // Deteriorating state
+        } else if (gameState.health == 30) {
+            level = -2; // Deteriorating state
+        } else if (gameState.health == 20) {
+            level = -3; // Deteriorating state
+        } else if (gameState.health == 10) {
+            level = -4; // Deteriorating state
+        } else if (gameState.health == 0) {
+            level = -5; // Deteriorating state
+        } else if (gameState.health == 50){
+            level = 0; // Middle state (destroyed)
         }
 
+        // Update background image
+        natureContainer.style.backgroundImage = `url('./imgs/Park-level-${level}.gif')`;
+    }
+
+
         function updateGameStats() {
-            goodActionsDisplay.textContent = `Good Actions: ${gameState.goodActions}`;
-            badActionsDisplay.textContent = `Bad Actions: ${gameState.badActions}`;
             timeLeftDisplay.textContent = `Time Left: ${gameState.timeLeft}`;
             healthProgress.style.width = `${gameState.health}%`;
         }
@@ -112,13 +133,11 @@
         function handleAction(isGoodAction) {
             if (isGoodAction) {
                 gameState.goodActions++;
-                gameState.health = Math.min(100, gameState.health + 15);
-                gameState.timeLeft = Math.min(60, gameState.timeLeft + 5);
+                gameState.health = Math.min(100, gameState.health + 10);
                 generateNatureScene(true);
             } else {
                 gameState.badActions++;
-                gameState.health = Math.max(0, gameState.health - 20);
-                gameState.timeLeft = Math.max(0, gameState.timeLeft - 10);
+                gameState.health = Math.max(0, gameState.health - 10);
                 generateNatureScene(false);
             }
 
