@@ -6,18 +6,20 @@
     <style>
         body {
             margin: 0;
+            height: 100vh;
             display: flex;
             flex-direction: row;
             justify-content: center;
+            justify-items: center;
             align-items: center;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             overflow: hidden;
         }
         button {
-            width: 200px;
-            height: 100px;
-            margin: 20px;
+            width: 30vw;
+            height: 20vh;
+            margin: 15px;
             font-size: 40px;
             cursor: pointer;
             border: 1.5px solid rgb(77, 71, 71);
@@ -25,7 +27,6 @@
             transition: all 0.3s ease;
         }
         button:hover {
-            background-color: #d1e7dd;
             transform: scale(1.05);
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
@@ -38,13 +39,30 @@
     </style>
 </head>
 <body>
-    <button class="good-button">🌻</button>
-    <button class="bad-button">🔥</button>
+    <button class="good-button">🌲</button>
+    <button class="bad-button">🪓</button>
 
     <script>
-        // List of emojis for buttons
-        const goodEmojis = ['🌟', '🌈', '🎉', '☀️', '🍎', '🌸', '🍀', '🌻'];
-        const badEmojis = ['🔥', '💣', '☠️', '🥀', '🧊', '🏗️', '⚡', '🗑️💩'];
+        // List of emojis and corresponding anecdotes
+        const goodAnecdotes = {
+            "🌲": { title: "Planting Trees 🌲", message: "Life flourishes where care is given—air becomes cleaner, and the land awakens with green.", statistic: "Each tree absorbs up to 48 pounds of CO₂ per year and produces enough oxygen for two people annually." },
+            "☀️": { title: "Using Renewable Energy ☀️", message: "Harnessing the sun and wind today keeps the future bright and sustainable.", statistic: "Switching one household to solar energy can reduce carbon emissions by 3-4 tons per year." },
+            "♻️": { title: "Reducing Waste ♻️", message: "A little effort to reuse creates less chaos in nature's balance.", statistic: "Recycling one ton of paper saves 17 trees, 7,000 gallons of water, and 4,000 kilowatts of energy." },
+            "🚰": { title: "Conserving Water 🚰", message: "Every drop saved today replenishes the rivers of tomorrow.", statistic: "Fixing a leaky faucet can save up to 3,000 gallons of water per year." },
+            "🐾": { title: "Supporting Wildlife 🐾", message: "A single act of kindness restores harmony to the web of life.", statistic: "Habitat restoration projects can increase local biodiversity by up to 30%." },
+            "🚲": { title: "Cycling Instead of Driving 🚲", message: "Pedal power leaves a path of clean skies and quiet streets.", statistic: "Replacing a 10-mile car trip with cycling prevents 5 pounds of CO₂ emissions." },
+            "🛍️": { title: "Choosing Sustainable Products 🛍️", message: "Small choices ripple into big changes for the world we share.", statistic: "Opting for one reusable bag can replace 500 single-use plastic bags annually." }
+        };
+
+        const badAnecdotes = {
+            "🪓": { title: "Cutting Down Trees 🪓", message: "Short-term gain leaves long-term scars.", statistic: "Burning one gallon of gasoline emits 20 pounds of CO₂." },
+            "⛽": { title: "Using Fossil Fuels ⛽", message: "Carelessness today poisons tomorrow's water.", statistic: "Chemical spills kill 1 million aquatic creatures annually." },
+            "💩": { title: "Littering 💩", message: "Disposing of hazardous waste harms ecosystems.", statistic: "Toxic waste affects over 10% of global soil." },
+            "💧": { title: "Wasting Water 💧", message: "Unchecked greed leaves nature barren.", statistic: "Deforestation causes 10% of global CO₂ emissions." },
+            "🏹": { title: "Overhunting or Poaching 🏹", message: "Carbon emissions speed up the polar meltdown.", statistic: "Global warming increases sea levels by 1.2 inches per decade." },
+            "🚗": { title: "Driving Gas-Powered Vehicles Excessively 🚗", message: "Replacing nature with concrete disrupts ecosystems.", statistic: "Urban sprawl reduces wildlife habitats by 40%." },
+            "🏭": { title: "Supporting Non-Sustainable Practices 🏭", message: "Wasted power drains the planet's resources.", statistic: "Energy wastage costs $1.7 billion annually." }
+        };
 
         // Get the buttons
         const goodButton = document.querySelector('.good-button');
@@ -56,15 +74,18 @@
         }
 
         // Function to handle button clicks
-        function handleButtonClick(action) {
-            // Post message to the parent window
-            window.opener.postMessage({ action }, '*');
+        function handleButtonClick(action, emojiList, anecdoteList) {
+            const emoji = action === "good" ? goodButton.textContent : badButton.textContent;
+            const anecdote = anecdoteList[emoji];
+
+            // Post message with action, emoji, and anecdote details
+            window.opener.postMessage({ action, emoji, anecdote }, '*');
 
             // Assign a random emoji to each button, ensuring no duplicates
-            const newGoodEmoji = getRandomEmoji(goodEmojis);
+            const newGoodEmoji = getRandomEmoji(Object.keys(goodAnecdotes));
             let newBadEmoji;
             do {
-                newBadEmoji = getRandomEmoji(badEmojis);
+                newBadEmoji = getRandomEmoji(Object.keys(badAnecdotes));
             } while (newBadEmoji === newGoodEmoji);
 
             goodButton.textContent = newGoodEmoji;
@@ -72,8 +93,8 @@
         }
 
         // Attach event listeners
-        goodButton.addEventListener('click', () => handleButtonClick('good'));
-        badButton.addEventListener('click', () => handleButtonClick('bad'));
+        goodButton.addEventListener('click', () => handleButtonClick('good', Object.keys(goodAnecdotes), goodAnecdotes));
+        badButton.addEventListener('click', () => handleButtonClick('bad', Object.keys(badAnecdotes), badAnecdotes));
     </script>
 </body>
 </html>
