@@ -154,8 +154,10 @@
 
             // Play corresponding audio
             const audioElement = document.getElementById('level-audio');
-            audioElement.src = `./audio/park-level-${level}.wav`;
-            audioElement.play().catch((error) => console.warn('Audio playback failed:', error));
+            natureContainer.addEventListener('click', function() {
+                audioElement.src = `./audio/park-level-${level}.wav`;
+                audioElement.play().catch((error) => console.warn('Audio playback failed:', error)); 
+            });
         }
 
         //Prelaod Audio files
@@ -200,6 +202,7 @@
 
         function startGameTimer() {
             if (gameState.timerStarted) return;
+            natureContainer.click();
 
             gameState.timerStarted = true;
             gameState.timerInterval = setInterval(() => {
