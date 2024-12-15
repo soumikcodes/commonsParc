@@ -80,6 +80,19 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
+        #restartButton {
+            background-color: #a9d6ab;
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #restartButton:hover {
+            background-color: #45a049;
+        }
+
     </style>
 </head>
 <body>
@@ -96,7 +109,8 @@
         <div id="nature-container"></div>
 
         <!-- Insert audio for each level -->
-        <audio id="level-audio" src=" " preload="auto"></audio>
+        <iframe src="./audio/park-level-0.wav" allow="autoplay" id="audio" style="display: none"></iframe>
+        <audio id="level-audio" src=" " preload="auto" allow="autoplay"></audio>
 
         <div class="modal" id="anecdoteModal">
             <div class="modal-content">
@@ -105,6 +119,16 @@
                 <p class="statistic" id="anecdoteStatistic"></p>
             </div>
         </div>
+
+        <!-- End Game Modal -->
+        <div id="gameEndModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Game Over</h2>
+                <p id="gameEndMessage"> </p>
+                <button id="restartButton" onclick="refreshGame()"> ↻ </button>
+            </div>
+        </div>
+        
         
     </div>
 
@@ -193,12 +217,29 @@
             checkGameEnd();
         }
 
-
         function checkGameEnd() {
             if (gameState.health <= 0 || gameState.timeLeft <= 0 || gameState.health == 100) {
-                alert(`Game Over! You managed ${gameState.goodActions} good actions, but ${gameState.badActions} bad actions led to the commons' demise.`);
-                clearInterval(gameState.timerInterval); // Stop the timer
+                const modal = document.getElementById('gameEndModal');
+                let consequence = "";
+                if (gameState.health >= 50){
+                    consequence = "flourishment.";
+                }else if (gameState.health <50) {
+                    consequence = "demise.";
+                }
+                const message = `You managed ${gameState.goodActions} good actions, but ${gameState.badActions} bad actions led to the commons' ${consequence}`;
+                // console.log(message);
+                // Set the game-end message dynamically
+                document.getElementById('gameEndMessage').textContent = message;
+                modal.style.display = 'flex';
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 6000);
             }
+        }
+
+        function refreshGame(){
+            window.location.reload();
         }
 
         function startGameTimer() {
@@ -242,6 +283,7 @@
                 const { anecdote } = event.data;
                 console.log('Received anecdote:', anecdote); // Debugging line
                 handleAction(event.data.action);
+                healthProgress.click();
                 displayAnecdoteWithDelay(anecdote);
             }else {
                 console.log('Invalid message data:', event.data); // Debugging line
@@ -249,6 +291,10 @@
 
             // Start the timer when a button is clicked for the first time
             startGameTimer();
+        });
+        healthProgress.addEventListener("click", () => {
+            console.log("Health bar was clicked manually or programmatically.");
+            // Define health bar behavior here
         });
 
         // Function to handle the display with delay and timeout
@@ -262,14 +308,6 @@
                 }, 5000);
             }, 2000);
         }
-
-        // window.addEventListener('message', (event) => {
-        //     if (event.data.action === 'good') handleAction(true);
-        //     if (event.data.action === 'bad') handleAction(false);
-
-        //     // Start the timer when a button is clicked for the first time
-        //     startGameTimer();
-        // });
 
         function openInteractionWindow() {
             interactionWindow = window.open('interaction_window.html', 'InteractionWindow', 'width=500,height=400');
