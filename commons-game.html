@@ -154,10 +154,11 @@
 
             // Play corresponding audio
             const audioElement = document.getElementById('level-audio');
-            natureContainer.addEventListener('click', function() {
+            // natureContainer.addEventListener('click', function() {
                 audioElement.src = `./audio/park-level-${level}.wav`;
+                audioElement.loop = 'true';
                 audioElement.play().catch((error) => console.warn('Audio playback failed:', error)); 
-            });
+            // });
         }
 
         //Prelaod Audio files
@@ -239,8 +240,11 @@
             // Ensure the event contains the expected data
             if (event.data && event.data.action && event.data.anecdote) {
                 const { anecdote } = event.data;
+                console.log('Received anecdote:', anecdote); // Debugging line
                 handleAction(event.data.action);
                 displayAnecdoteWithDelay(anecdote);
+            }else {
+                console.log('Invalid message data:', event.data); // Debugging line
             }
 
             // Start the timer when a button is clicked for the first time
