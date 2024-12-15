@@ -109,7 +109,6 @@
         <div id="nature-container"></div>
 
         <!-- Insert audio for each level -->
-        <iframe src="./audio/park-level-0.wav" allow="autoplay" id="audio" style="display: none"></iframe>
         <audio id="level-audio" src=" " preload="auto" allow="autoplay"></audio>
 
         <div class="modal" id="anecdoteModal">
@@ -283,7 +282,6 @@
                 const { anecdote } = event.data;
                 console.log('Received anecdote:', anecdote); // Debugging line
                 handleAction(event.data.action);
-                healthProgress.click();
                 displayAnecdoteWithDelay(anecdote);
             }else {
                 console.log('Invalid message data:', event.data); // Debugging line
@@ -291,10 +289,6 @@
 
             // Start the timer when a button is clicked for the first time
             startGameTimer();
-        });
-        healthProgress.addEventListener("click", () => {
-            console.log("Health bar was clicked manually or programmatically.");
-            // Define health bar behavior here
         });
 
         // Function to handle the display with delay and timeout
