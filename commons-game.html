@@ -27,7 +27,7 @@
             justify-content: center;
             align-items: center;
             background-image: url("./imgs/Park-level-0.gif");
-            background-size: 100vw; 
+            background-size: cover; 
             background-repeat: no-repeat;
             background-position: center;
             transition: background-image 1s ease, opacity 0.5s ease;
@@ -80,7 +80,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        #restartButton {
+/*        #restartButton {
             background-color: #a9d6ab;
             color: rgb(0, 0, 0);
             padding: 10px 20px;
@@ -91,7 +91,7 @@
 
         #restartButton:hover {
             background-color: #45a049;
-        }
+        }*/
 
     </style>
 </head>
@@ -124,7 +124,7 @@
             <div class="modal-content">
                 <h2>Game Over</h2>
                 <p id="gameEndMessage"> </p>
-                <button id="restartButton" onclick="refreshGame()"> ↻ </button>
+                <!-- <button id="restartButton" onclick="refreshGame()"> ↻ </button> -->
             </div>
         </div>
         
@@ -225,15 +225,18 @@
                 }else if (gameState.health <50) {
                     consequence = "demise.";
                 }
-                const message = `You managed ${gameState.goodActions} good actions, but ${gameState.badActions} bad actions led to the commons' ${consequence}`;
+                const message = `This is the consequence of your actions to this park.
+                You managed ${gameState.goodActions} good actions, but ${gameState.badActions} bad actions led to the commons' ${consequence}`;
                 // console.log(message);
                 // Set the game-end message dynamically
                 document.getElementById('gameEndMessage').textContent = message;
-                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.style.display = 'flex';
 
                 setTimeout(() => {
                     window.location.reload();
-                }, 6000);
+                    }, 10000);
+                }, 3000);
             }
         }
 
@@ -254,7 +257,7 @@
                     clearInterval(gameState.timerInterval);
                     checkGameEnd();
                 }
-            }, 1000);
+            }, 500);
         }
 
         // Function to show the modal
@@ -300,7 +303,7 @@
                     modal.style.opacity = 0;
                     closeModal();
                 }, 5000);
-            }, 2000);
+            }, 3000);
         }
 
         function openInteractionWindow() {
